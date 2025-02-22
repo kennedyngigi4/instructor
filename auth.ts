@@ -15,7 +15,7 @@ export const { handlers, signIn, signOut, auth  } = NextAuth({
                 password: {}
             },
             async authorize(credentials, req){
-                const res = await fetch('http://127.0.0.1:8000/api/account/login/', {
+                const res = await fetch(`${process.env.NEXT_PUBLIC_API_BASE_URL}/account/login/`, {
                     method: 'POST',
                     body: JSON.stringify(credentials),
                     headers: {
@@ -52,7 +52,9 @@ export const { handlers, signIn, signOut, auth  } = NextAuth({
             session.user.id = token.id;
             return session;
         },
-    }
+    },
+    trustHost: true,
+    AUTH_TRUST_HOST: true,
 
 })
 
