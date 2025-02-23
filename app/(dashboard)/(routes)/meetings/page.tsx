@@ -14,25 +14,25 @@ import { CalendarCheckIcon, PlusSquareIcon, Share2 } from 'lucide-react';
 
 const MeetingsPage = () => {
   const router = useRouter();
-  const { data:session } = useSession();
+  const { data: session } = useSession();
   const client = useStreamVideoClient();
-  const [ values, setValues ] = useState({
+  const [values, setValues] = useState({
     dateTime: new Date(),
     description: "",
     link: "",
   });
-  const [ meetingState, setMeetingState ] = useState<'isScheduleMeeting' | 'isJoinMeeting' | undefined >();
+  const [meetingState, setMeetingState] = useState<'isScheduleMeeting' | 'isJoinMeeting' | undefined>();
 
-  const [ callDetails, setCallDetails ] = useState<Call>();
+  const [callDetails, setCallDetails] = useState<Call>();
 
-  const createMeeting = async() => {
-    if(!client) return;
+  const createMeeting = async () => {
+    if (!client) return;
 
     try {
       const id = crypto.randomUUID();
       const call = client.call('default', id)
 
-      if(!call) throw new Error("Failed to create a call");
+      if (!call) throw new Error("Failed to create a call");
 
       const startsAt = values.dateTime.toISOString() || new Date(Date.now()).toISOString();
       const description = values.description || "Instant meeting";
@@ -48,14 +48,14 @@ const MeetingsPage = () => {
 
       setCallDetails(call);
 
-      if(!values.description) {
+      if (!values.description) {
         router.push(`/meetings/${call.id}`);
       }
 
       toast.success("Meeting created")
-    } catch(error){
+    } catch (error) {
       console.log(error);
-      toast.error("Filed to create meeting",{ style: { background: "#ff0000", color: "#ffffff"}});
+      toast.error("Filed to create meeting", { style: { background: "#ff0000", color: "#ffffff" } });
     }
   }
 
@@ -78,7 +78,7 @@ const MeetingsPage = () => {
           </Card>
         </div>
         <div className="md:col-span-4 col-span-12">
-          <div onClick={() => setMeetingState("isScheduleMeeting")}>
+          <div>
             <Card className="bg-isky_orange text-white">
               <CardHeader className="pb-14">
                 <CalendarCheckIcon />
@@ -86,11 +86,11 @@ const MeetingsPage = () => {
                 <CardDescription className="text-white">Schedule meeting and share link</CardDescription>
               </CardHeader>
               <CardContent>
-                <Button onClick={createMeeting}>Schedule a meeting</Button>
+                <Button onClick={() => setMeetingState("isScheduleMeeting")}>Schedule a meeting</Button>
               </CardContent>
             </Card>
           </div>
-          
+
           {!callDetails ? (
             <MeetingModal
               isOpen={meetingState === "isScheduleMeeting"}
@@ -101,19 +101,19 @@ const MeetingsPage = () => {
             >
               <div className="flex flex-col gap-2.5">
                 <label className="text-base text-normal leading-[22px]">Add a description</label>
-                <Textarea 
-                  className="border-none bg-slate-200 focus-visible:ring-0 focus-visible:ring-offset-0" 
+                <Textarea
+                  className="border-none bg-slate-200 focus-visible:ring-0 focus-visible:ring-offset-0"
                   onChange={(e) => {
-                    setValues({...values, description: e.target.value})
-                  }} 
+                    setValues({ ...values, description: e.target.value })
+                  }}
                 />
               </div>
               <div className="flex w-full flex-col gap-2.5">
                 <label className="text-base text-normal leading-[22px]">Select Date and Time</label>
-                <DatePicker 
-                  selected={values.dateTime} 
-                  onChange={(date) => setValues({...values, dateTime: date!})} 
-                  showTimeSelect 
+                <DatePicker
+                  selected={values.dateTime}
+                  onChange={(date) => setValues({ ...values, dateTime: date! })}
+                  showTimeSelect
                   timeFormat="HH:mm"
                   timeIntervals={15}
                   timeCaption="time"
@@ -123,23 +123,23 @@ const MeetingsPage = () => {
               </div>
             </MeetingModal>
           ) : (
-              <MeetingModal
-                isOpen={meetingState === "isScheduleMeeting"}
-                onClose={() => setMeetingState(undefined)}
-                title="Meeting Created"
-                className="text-center"
-                buttonText="Copy meeting link"
-                handleClick={() => {
-                  navigator.clipboard.writeText(meetingLink)
-                  toast.success("Link copied")
-                }}
-              />
+            <MeetingModal
+              isOpen={meetingState === "isScheduleMeeting"}
+              onClose={() => setMeetingState(undefined)}
+              title="Meeting Created"
+              className="text-center"
+              buttonText="Copy meeting link"
+              handleClick={() => {
+                navigator.clipboard.writeText(meetingLink)
+                toast.success("Link copied")
+              }}
+            />
           )}
 
-          
+
         </div>
         <div className="md:col-span-4 col-span-12">
-          
+
         </div>
       </div>
 
@@ -150,7 +150,7 @@ const MeetingsPage = () => {
         <div>
           <Button variant="default" className=""><Share2 className="h-4 w-4 mr-3" /> Share link</Button>
         </div>
-        
+
       </div>
     </section>
   )
