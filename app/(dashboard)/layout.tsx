@@ -15,7 +15,7 @@ const DashboardLayout = ({
   const router = useRouter();
 
   useEffect(() => {
-    if (status != "authenticated") {
+    if (status == "unauthenticated") {
       router.push("/signin");
     }
   }, [status]);
