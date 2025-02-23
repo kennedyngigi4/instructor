@@ -44,12 +44,14 @@ export const { handlers, signIn, signOut, auth  } = NextAuth({
             if (user) {
                 token.accessToken = user.access;
                 token.id = user.id;
+                token.role = user.role;
             }
             return token;
         },
         async session({ session, token }) {
             session.accessToken = token.accessToken;
             session.user.id = token.id;
+            session.user.role = token.role;
             return session;
         },
     },

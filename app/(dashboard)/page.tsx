@@ -34,34 +34,37 @@ const DashboardPage = () => {
         <p className="text-slate-500">Today's quote from the programme manager comes here.</p>
       </section>
 
-      
-
       <section className="grid md:grid-cols-12 grid-cols-12 py-10 gap-y-8 gap-x-10">
         <div className="col-span-12 md:col-span-9">
           <h1 className="font-semibold text-lg">Courses assigned to you</h1>
 
           <div className="pt-4">
+            {assignedCourses.length > 0 ? (
+              <>
+                {assignedCourses.slice(0,5).map((course) => (
+                  <div key={course?.course_id} className="grid md:grid-cols-12 grid-cols-12 pb-2 border-b-2 pt-4">
+                    <div className="col-span-4">
+                      <p className="text-sm flex"><Book className="h-4 w-4 text-isky_blue" /> Course</p>
+                      <p>{course?.title}</p>
+                    </div>
+                    <div className="col-span-3">
+                      <p className="text-sm flex"> Level</p>
+                      <p className="flex text-sm"><Files className="h-4 w-4 mr-2" /> {course?.level}</p>
+                    </div>
+                    <div className="col-span-3">
+                      <p className="text-sm flex"> Status</p>
+                      <p className="flex text-green-700 text-xs">In progress</p>
+                    </div>
+                    <div className="col-span-2">
+                      <Button variant="outline" size="sm">Details</Button>
+                    </div>
+                  </div>
 
-            {assignedCourses.slice(0,5).map((course) => (
-              <div key={course?.course_id} className="grid md:grid-cols-12 grid-cols-12 pb-2 border-b-2 pt-4">
-                <div className="col-span-4">
-                  <p className="text-sm flex"><Book className="h-4 w-4 text-isky_blue" /> Course</p>
-                  <p>{course?.title}</p>
-                </div>
-                <div className="col-span-3">
-                  <p className="text-sm flex"> Level</p>
-                  <p className="flex text-sm"><Files className="h-4 w-4 mr-2" /> {course?.level}</p>
-                </div>
-                <div className="col-span-3">
-                  <p className="text-sm flex"> Status</p>
-                  <p className="flex text-green-700 text-xs">In progress</p>
-                </div>
-                <div className="col-span-2">
-                  <Button variant="outline" size="sm">Details</Button>
-                </div>
-              </div>
-
-            ))}
+                ))}
+              </>
+            ) : (
+              <p className="italic text-slate-500">No courses have been assigned to you yet.</p>
+            )}
 
             
           </div>

@@ -180,7 +180,7 @@ const SignupPage = () => {
               />
 
               <div className="mt-3 text-center">
-                <Button className="bg-isky_orange hover:bg-isky_blue py-5 text-lg px-28 rounded-3xl font-lato font-bold">Sign up</Button>
+                <Button className="bg-isky_orange hover:bg-isky_blue py-5 text-lg px-28 rounded-3xl font-lato font-bold" disabled={!isValid || isSubmitting }>Sign up</Button>
               </div>
             </form>
           </Form>

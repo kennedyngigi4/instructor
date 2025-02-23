@@ -15,10 +15,10 @@ const DashboardLayout = ({
   const router = useRouter();
 
   useEffect(() => {
-    if (status == "unauthenticated") {
+    if (status == "unauthenticated" || session?.user?.role != "Instructor") {
       router.push("/signin");
     }
-  }, [status]);
+  }, [status, session?.user?.role]);
 
 
   return (

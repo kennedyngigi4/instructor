@@ -1,6 +1,6 @@
 "use client"
 
-import React from 'react';
+import React, { useState } from 'react';
 import axios from 'axios';
 import { z } from "zod";
 import { zodResolver } from '@hookform/resolvers/zod';
@@ -13,6 +13,7 @@ import { Input } from '@/components/ui/input';
 import Link from 'next/link';
 import { signIn } from "next-auth/react";
 import { useRouter } from 'next/navigation'
+import { Eye, EyeOff } from 'lucide-react';
 
 
 const formSchema = z.object({
@@ -26,6 +27,7 @@ const formSchema = z.object({
 })
 
 const SignInPage = () => {
+  const [passwordView, setPasswordView] = useState(false);
   const router = useRouter();
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -38,7 +40,6 @@ const SignInPage = () => {
   const { isValid, isSubmitting } = form.formState;
 
   const onSubmit = async (values: z.infer<typeof formSchema>) => {
-    // console.log(values);
     const res = await signIn("credentials", {
       redirect: false,
       email: values.email,
@@ -89,12 +90,29 @@ const SignInPage = () => {
                 <FormItem>
                   <FormLabel>Password</FormLabel>
                   <FormControl>
-                    <Input 
-                      type="password"
-                      disabled={isSubmitting}
-                      placeholder="********"
-                      {...field}
-                    />
+                    <div className="relative">
+                      <Input 
+                        type={passwordView ? "text" : "password"}
+                        disabled={isSubmitting}
+                        placeholder="********"
+                        {...field}
+                      />
+                      {passwordView ? (
+                        <Eye
+                          className="absolute right-3 top-2 z-50 cursor-pointer text-gray-400"
+                          onClick={() => {
+                            setPasswordView(!passwordView)
+                          }}
+                        />
+                      ) : (
+                        <EyeOff
+                          className="absolute right-3 top-2 z-50 cursor-pointer text-gray-400"
+                          onClick={() => {
+                            setPasswordView(!passwordView)
+                          }}
+                        />
+                      )}
+                    </div>
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -105,7 +123,7 @@ const SignInPage = () => {
               <Link className="text-isky_blue py-2" href="/reset-password">Forgot Password?</Link>
             </div>
 
-            <Button type="submit">Log in</Button>
+            <Button type="submit" className="bg-isky_orange" disabled={!isValid || isSubmitting}>Log in</Button>
           </form>
         </Form>
         <div className="mt-3">
