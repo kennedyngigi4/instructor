@@ -10,7 +10,7 @@ import toast from 'react-hot-toast';
 import MeetingModal from './[meetingId]/_components/meeting-modal';
 import { Textarea } from '@/components/ui/textarea';
 import DatePicker from "react-datepicker";
-import { CalendarCheckIcon, PlusSquareIcon } from 'lucide-react';
+import { CalendarCheckIcon, PlusSquareIcon, Share2 } from 'lucide-react';
 
 const MeetingsPage = () => {
   const router = useRouter();
@@ -144,8 +144,13 @@ const MeetingsPage = () => {
       </div>
 
 
-      <div className="flex pt-16">
-          <h1 className="font-semibold text-xl">Upcoming online classes</h1>
+      <div className="flex flex-row justify-between pt-16">
+        <h1 className="font-semibold text-xl">Upcoming online classes</h1>
+
+        <div>
+          <Button variant="default" className=""><Share2 className="h-4 w-4 mr-3" /> Share link</Button>
+        </div>
+        
       </div>
     </section>
   )
