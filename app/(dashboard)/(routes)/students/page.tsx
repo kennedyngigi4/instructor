@@ -1,17 +1,38 @@
+"use client"
 
-import React from 'react'
-import { DataTable } from './_components/data-table'
-import { columns } from './_components/columns'
-
+import React, { useEffect, useState } from 'react';
+import axios from 'axios';
+import { DataTable } from './_components/data-table';
+import { columns } from './_components/columns';
+import { useSession } from 'next-auth/react';
+import toast from 'react-hot-toast';
 
 const students: any[] = [
 
 ]
 
 
-const InstructorStudentsPage = async() => {
+const InstructorStudentsPage = () => {
+  const { data:session } = useSession();
+  const [ enrolledStudents, setEnrolledStudents ] = useState([]);
 
-  const allStudents = students;
+  useEffect(() => {
+    const fetchStudents = async() => {
+      try{
+        const response = await axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/instructor/enrolled_students`, {
+          headers: {
+            'Authorization': `Token ${session?.accessToken}`
+          }
+        });
+        console.log(response.data)
+        setEnrolledStudents(response.data)
+      } catch (error) {
+        toast.error("Something went wrong");
+      }
+    }
+    fetchStudents();
+
+  }, []);
 
   return (
     <section className="p-6">
@@ -21,7 +42,7 @@ const InstructorStudentsPage = async() => {
       </section>
 
       <div className="">
-        <DataTable columns={columns} data={allStudents} />
+        <DataTable columns={columns} data={enrolledStudents} />
       </div>
     </section>
   )

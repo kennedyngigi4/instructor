@@ -69,12 +69,12 @@ const ChapterId = ({
                             <h1 className="text-2xl font-medium">Chapter creation</h1>
                             <span className="text-sm text-slate-700">Complete all fields {completionText}</span>
                         </div>
-                        <ChapterActions
+                        {/* <ChapterActions
                             disabled={!isComplete}
                             courseId={resolvedParams.courseId}
                             chapterId={resolvedParams.chapterId}
                             is_published={chapter?.is_published}
-                        />
+                        /> */}
                     </div>
                 </div>
             </div>
@@ -96,7 +96,7 @@ const ChapterId = ({
                     <div>
                         <div className="flex items-center gap-x-2">
                             <Video className="h-4 w-4 mr-2" />
-                            <h2 className="text-lg">Add a video</h2>
+                            <h2 className="text-lg">Video</h2>
                         </div>
                     </div>
                 </div>

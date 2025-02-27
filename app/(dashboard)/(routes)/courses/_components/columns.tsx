@@ -5,7 +5,7 @@ import { Button } from "@/components/ui/button"
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
 import { cn } from "@/lib/utils"
 import { ColumnDef } from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Pencil } from "lucide-react"
+import { ArrowUpDown, InfoIcon, MoreHorizontal } from "lucide-react"
 import Link from "next/link"
 
 // This type is used to define the shape of our data.
@@ -93,12 +93,12 @@ export const columns: ColumnDef<Payment>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {/* <Link className="cursor-pointer" href={`/courses/${course_id}/`}>
+                        <Link className="cursor-pointer" href={`/courses/${course_id}/`}>
                             <DropdownMenuItem>
-                                <Pencil className="h-4 w-4 mr-2" />
-                                Edit
+                                <InfoIcon className="h-4 w-4 mr-2" />
+                                Details
                             </DropdownMenuItem>
-                        </Link> */}
+                        </Link>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

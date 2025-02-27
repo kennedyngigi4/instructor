@@ -69,16 +69,7 @@ const TitleForm = ({ initialData, courseId } : TitleFormProps) => {
             Course title
 
             
-            <Button onClick={toggleEdit} variant="ghost">
-                {isEditing ? (
-                    <>Cancel</>
-                ) : (
-                    <>
-                        <Pencil className="h-4 w-4 mr-2" />
-                        Edit title
-                    </>
-                )}
-            </Button>
+            
         </div>
         {!isEditing && (
             <p className="text-sm mt-2">{initialData?.title}</p>

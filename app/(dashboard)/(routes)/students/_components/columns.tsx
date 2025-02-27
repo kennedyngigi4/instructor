@@ -11,17 +11,16 @@ import Link from "next/link"
 // This type is used to define the shape of our data.
 // You can use a Zod schema here if you want.
 export type Payment = {
-    id: string;
-    level: string;
-    fullname: string;
-    age_range: string
-    email: string;
-    is_published: "true" | "false" | "success" | "failed"
+    purchase_id: string;
+    user_details: string;
+    course_name: string;
+    progress: number;
+    enrolled_at: string;
 }
 
 export const columns: ColumnDef<Payment>[] = [
     {
-        accessorKey: "fullname",
+        accessorKey: "user_details",
         header: ({ column }) => {
             return (
                 <Button
@@ -35,59 +34,67 @@ export const columns: ColumnDef<Payment>[] = [
         },
     },
     {
-        accessorKey: "email",
-        header: "Email"
-    },
-    {
-        accessorKey: "level",
+        accessorKey: "course_name",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Level
+                    Course
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
-        cell: ({ row }) => {
-            const level = row.getValue("level")
-
-            return (
-                <Badge className={cn("bg-slate-500", level && "bg-isky_orange")}>
-                    { level != null ? level : "No level"}
-                </Badge>
-            )
-        }
     },
     {
-        accessorKey: "age_range",
+        accessorKey: "progress",
         header: ({ column }) => {
             return (
                 <Button
                     variant="ghost"
                     onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
                 >
-                    Age Range
+                    Progress
                     <ArrowUpDown className="ml-2 h-4 w-4" />
                 </Button>
             )
         },
         cell: ({ row }) => {
-            const isPublished = row.getValue("is_published")
-
+            const progress = row.getValue("progress")
             return (
-                <Badge className={cn("bg-slate-500", isPublished && "bg-isky_orange")}>
-                    {isPublished ? "Published" : "Draft"}
-                </Badge>
+                <p className="text-start ps-5">Chapter: {progress}</p>
             )
         }
     },
     {
+        accessorKey: "enrolled_at",
+        header: ({ column }) => {
+            return (
+                <Button
+                    variant="ghost"
+                    onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                >
+                    Date Enrolled
+                    <ArrowUpDown className="ml-2 h-4 w-4" />
+                </Button>
+            )
+        },
+        cell: ({ row }) => {
+            const enrolledDate = row.getValue("enrolled_at")
+            const date = new Date(enrolledDate);
+
+            return (
+                <p className="ps-5">{date.toLocaleDateString()}</p>
+            )
+        }
+    },
+    
+    {
+        // accessorKey: "user_id",
         header: "Action",
         cell: ({ row }) => {
-            const { course_id } = row.original;
+            const { user_id } = row.original
 
             return (
                 <DropdownMenu>
@@ -98,12 +105,12 @@ export const columns: ColumnDef<Payment>[] = [
                         </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                        {/* <Link className="cursor-pointer" href={`/courses/${course_id}/`}>
+                        <Link className="cursor-pointer" href={`/students/${user_id}`}>
                             <DropdownMenuItem>
                                 <Pencil className="h-4 w-4 mr-2" />
-                                Edit
+                                Info
                             </DropdownMenuItem>
-                        </Link> */}
+                        </Link>
                     </DropdownMenuContent>
                 </DropdownMenu>
             )

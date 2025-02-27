@@ -5,12 +5,19 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/com
 import { Call, useStreamVideoClient } from '@stream-io/video-react-sdk';
 import { useSession } from 'next-auth/react'
 import { useRouter } from 'next/navigation';
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import toast from 'react-hot-toast';
 import MeetingModal from './[meetingId]/_components/meeting-modal';
 import { Textarea } from '@/components/ui/textarea';
 import DatePicker from "react-datepicker";
 import { CalendarCheckIcon, PlusSquareIcon, Share2 } from 'lucide-react';
+import SharingMeetingLinkModal from './_components/sharing-link-modal';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import axios from 'axios';
+import { Select, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
+import { SelectContent, SelectGroup, SelectValue } from '@radix-ui/react-select';
+
 
 const MeetingsPage = () => {
   const router = useRouter();
@@ -21,8 +28,14 @@ const MeetingsPage = () => {
     description: "",
     link: "",
   });
+  const [ upcomingValues, setUpcomingValues ] = useState({
+    link: "",
+    schedule: new Date(),
+    course: "",
+    description: "",
+  });
   const [meetingState, setMeetingState] = useState<'isScheduleMeeting' | 'isJoinMeeting' | undefined>();
-
+  const [assignedCourses, setAssignedCourses ] = useState([]);
   const [callDetails, setCallDetails] = useState<Call>();
 
   const createMeeting = async () => {
@@ -54,12 +67,33 @@ const MeetingsPage = () => {
 
       toast.success("Meeting created")
     } catch (error) {
-      console.log(error);
-      toast.error("Filed to create meeting", { style: { background: "#ff0000", color: "#ffffff" } });
+      toast.error("Failed to create meeting", { style: { background: "#ff0000", color: "#ffffff" } });
     }
   }
 
   const meetingLink = `${process.env.NEXT_PUBLIC_BASE_URL}/meetings/${callDetails?.id}`;
+
+
+  // Get all courses
+  useEffect(() => {
+    axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/instructor/assigned_courses`, {
+      headers: {
+        'Authorization': `Token ${session?.accessToken}`
+      }
+    }).then((response) => {
+      setAssignedCourses(response.data);
+    }).catch((error) => {
+      toast.error("Something went wrong");
+    })
+
+  }, [session?.accessToken]);
+
+
+  const handleSharingLink = () => {
+   console.log(upcomingValues);
+  }
+
+
 
   return (
     <section className="p-6">
@@ -148,7 +182,86 @@ const MeetingsPage = () => {
         <h1 className="font-semibold text-xl">Upcoming online classes</h1>
 
         <div>
-          <Button variant="default" className=""><Share2 className="h-4 w-4 mr-3" /> Share link</Button>
+          <Dialog>
+            <DialogTrigger asChild>
+              <Button><Share2 className="h-4 w-4 mr-3" /> Share link</Button>
+            </DialogTrigger>
+            <DialogContent>
+              <DialogHeader>
+                <DialogTitle className="text-xl font-bold leading-[42px]">Share meeting link with students</DialogTitle>
+              </DialogHeader>
+              <div className="grid md:grid-cols-1 grid-cols-1 pt-4 space-y-5">
+                <div className="flex w-full flex-col gap-2.5">
+                  <label className="text-base text-normal leading-[22px]">Meeting link</label>
+                  <Input 
+                    placeholder="Meeting link" 
+                    className="border-none bg-slate-200 focus-visible:ring-0 focus-visible:ring-offset-0" 
+                    onChange={(e) => {
+                      setUpcomingValues({ ...upcomingValues, link: e.target.value })
+                    }}
+                  />
+                </div>
+
+                <div className="flex w-full flex-col gap-2.5">
+                  <label className="text-base text-normal leading-[22px]">Select Date and Time</label>
+                  <DatePicker
+                    selected={upcomingValues.schedule}
+                    onChange={(date) => setUpcomingValues({ ...upcomingValues, schedule: date! })}
+                    showTimeSelect
+                    timeFormat="HH:mm"
+                    timeIntervals={15}
+                    timeCaption="time"
+                    dateFormat="MMMM d, yyyy h:mm aa"
+                    className="w-full rounded bg-slate-200 p-2 focus:outline-none"
+                  />
+                </div>
+
+                <div>
+                  <label className="text-base text-normal leading-[22px]">Course</label>
+                  <Select onValueChange={
+                    (e) => {
+                      
+                      setUpcomingValues({ ...upcomingValues, course: e })
+                    }
+                  }>
+                    <SelectTrigger className="border-none bg-slate-200 focus-visible:ring-0 focus-visible:ring-offset-0 w-full">
+                      <SelectValue placeholder="Select a course" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white p-5 w-full">
+                      <SelectGroup>
+                        <SelectLabel>Courses</SelectLabel>
+                        {assignedCourses.map((course) => (
+                          <SelectItem 
+                            key={course?.course_id} 
+                            value={course?.course_id}>
+                              {course?.title}
+                          </SelectItem>
+
+                        ))}
+                      </SelectGroup>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                <div className="flex flex-col gap-2.5">
+                  <label className="text-base text-normal leading-[22px]">Meeting description</label>
+                  <Textarea
+                    className="border-none bg-slate-200 focus-visible:ring-0 focus-visible:ring-offset-0"
+                    onChange={(e) => {
+                      setUpcomingValues({ ...upcomingValues, description: e.target.value })
+                    }}
+                  />
+                </div>
+
+                <div>
+                  <Button className="w-full" onClick={handleSharingLink}>Share Now</Button>
+                </div>
+                
+              </div>
+              
+            </DialogContent>
+          </Dialog>
+          
         </div>
 
       </div>

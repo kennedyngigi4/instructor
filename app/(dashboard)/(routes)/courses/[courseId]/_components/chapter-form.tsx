@@ -80,17 +80,7 @@ const ChapterForm = ({
         <section className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
                 Course chapters
-                <Button onClick={toggleCreating} variant="ghost">
-                    {isCreating ? (
-                        <>Cancel</>
-                    ) : (
-                        <>
-                            <PlusCircle className="h-4 w-4 mr-2" />
-                            Add a chapter
-                        </>
-                    )}
-
-                </Button>
+                
             </div>
             
             {isCreating && (

@@ -26,7 +26,6 @@ export const { handlers, signIn, signOut, auth  } = NextAuth({
                 const user = await res.json();
 
                 if (user.message == "success"){
-                    console.log(user)
                     return user;
                 } 
                 return null;

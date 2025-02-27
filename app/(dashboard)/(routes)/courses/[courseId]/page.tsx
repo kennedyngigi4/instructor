@@ -27,18 +27,17 @@ const CourseIdPage = ({
   const [ course, setCourse ] = useState(null);
 
   useEffect(() => {
-    // async function fetchCourse(){
+    
       axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/instructor/courses/${resolvedParams.courseId}/`, {
         headers: {
           'Authorization': `Token ${session?.accessToken}`
         }
       }).then((response) => {
+        console.log(response.data)
         setCourse(response.data)
       })
       
-    // }
-
-    // fetchCourse();
+    
   }, [resolvedParams.courseId]);
 
 
@@ -93,11 +92,11 @@ const CourseIdPage = ({
             </h1>
             <span className="text-sm text-slate-700">Complete all fields {completionText}</span>
           </div>
-          <Actions
+          {/* <Actions
             disabled={!isComplete}
             courseId={resolvedParams?.courseId}
             is_published={course?.is_published}
-          />
+          /> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-16">

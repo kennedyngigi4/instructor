@@ -8,6 +8,7 @@ import { Button } from '@/components/ui/button';
 import { useSession, signOut } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import Link from 'next/link';
 
 const DashboardPage = () => {
   const { data:session } = useSession();
@@ -25,7 +26,7 @@ const DashboardPage = () => {
       toast.error("Something went wrong");
     })
 
-  }, []);
+  }, [session?.accessToken]);
 
   return (
     <section className="p-6">
@@ -53,10 +54,16 @@ const DashboardPage = () => {
                     </div>
                     <div className="col-span-3">
                       <p className="text-sm flex"> Status</p>
-                      <p className="flex text-green-700 text-xs">In progress</p>
+                      {course?.is_published 
+                        ? <><p className="flex text-green-700 font-semibold text-xs">Published</p></> 
+                        : <><p className="flex text-slate-700 text-xs">Draft</p></>
+                      }
+                      
                     </div>
                     <div className="col-span-2">
-                      <Button variant="outline" size="sm">Details</Button>
+                      <Link className="cursor-pointer" href={`/courses/${course?.course_id}/`}>
+                        <Button variant="outline" size="sm">Details</Button>
+                      </Link>
                     </div>
                   </div>
 

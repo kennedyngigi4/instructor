@@ -68,17 +68,7 @@ const CategoryForm = ({
         <section className="mt-6 border bg-slate-100 rounded-md p-4">
             <div className="font-medium flex items-center justify-between">
                 Course category
-                <Button onClick={toggleEdit} variant="ghost">
-                    {isEditing ? (
-                        <>Cancel</>
-                    ) : (
-                        <>
-                            <Pencil className="h-4 w-4 mr-2" />
-                            Edit category
-                        </>
-                    )}
-
-                </Button>
+                
             </div>
             {!isEditing && (
                 <p className={cn("text-sm mt-2", !initialData?.category && "text-slate-500 italic")}>
