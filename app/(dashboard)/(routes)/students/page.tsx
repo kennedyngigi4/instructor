@@ -24,7 +24,6 @@ const InstructorStudentsPage = () => {
             'Authorization': `Token ${session?.accessToken}`
           }
         });
-        console.log(response.data)
         setEnrolledStudents(response.data)
       } catch (error) {
         toast.error("Something went wrong");

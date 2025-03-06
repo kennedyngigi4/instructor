@@ -20,7 +20,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "ISKY TECH - Empowering Innovators",
+  title: "Instructor - ISKY TECH",
   description: "ISKY TECH - Empowering Innovators",
 };
 

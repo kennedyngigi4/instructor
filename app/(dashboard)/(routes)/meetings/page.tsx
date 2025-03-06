@@ -10,13 +10,14 @@ import toast from 'react-hot-toast';
 import MeetingModal from './[meetingId]/_components/meeting-modal';
 import { Textarea } from '@/components/ui/textarea';
 import DatePicker from "react-datepicker";
-import { CalendarCheckIcon, PlusSquareIcon, Share2 } from 'lucide-react';
+import { CalendarCheckIcon, PlusSquareIcon, RocketIcon, Share2 } from 'lucide-react';
 import SharingMeetingLinkModal from './_components/sharing-link-modal';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { Input } from '@/components/ui/input';
 import axios from 'axios';
 import { Select, SelectItem, SelectLabel, SelectTrigger } from '@/components/ui/select';
 import { SelectContent, SelectGroup, SelectValue } from '@radix-ui/react-select';
+import Link from 'next/link';
 
 
 const MeetingsPage = () => {
@@ -37,6 +38,7 @@ const MeetingsPage = () => {
   const [meetingState, setMeetingState] = useState<'isScheduleMeeting' | 'isJoinMeeting' | undefined>();
   const [assignedCourses, setAssignedCourses ] = useState([]);
   const [callDetails, setCallDetails] = useState<Call>();
+  const [allUpcomingClasess, setAllUpcomingClasess] = useState([]);
 
   const createMeeting = async () => {
     if (!client) return;
@@ -89,16 +91,34 @@ const MeetingsPage = () => {
   }, [session?.accessToken]);
 
 
-  const handleSharingLink = () => {
-   console.log(upcomingValues);
+  const handleSharingLink = async () => {
+    console.log(upcomingValues);
+    await axios.post(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/instructor/add_onlineclass`, upcomingValues, {
+      headers: {
+        "Authorization": `Token ${session?.accessToken}`
+      }
+    }).then((response) => {
+      toast.success("Listed successfully");
+      location.reload();
+    })
   }
 
+
+  useEffect(() => {
+    axios.get(`${process.env.NEXT_PUBLIC_API_BASE_URL}/courses/instructor/add_onlineclass`, {
+      headers: {
+        "Authorization": `Token ${session?.accessToken}`
+      }
+    }).then((response) => {
+      setAllUpcomingClasess(response.data);
+    })
+  }, [session?.accessToken])
 
 
   return (
     <section className="p-6">
 
-      <div className="grid md:grid-cols-12 grid-cols-12 gap-8">
+      <div className="grid md:grid-cols-12 grid-cols-1 gap-8">
         <div className="md:col-span-4 col-span-12">
           <Card className="bg-isky_blue text-white">
             <CardHeader className="pb-14">
@@ -180,7 +200,6 @@ const MeetingsPage = () => {
 
       <div className="flex flex-row justify-between pt-16">
         <h1 className="font-semibold text-xl">Upcoming online classes</h1>
-
         <div>
           <Dialog>
             <DialogTrigger asChild>
@@ -263,8 +282,35 @@ const MeetingsPage = () => {
           </Dialog>
           
         </div>
-
       </div>
+
+
+      <div className="grid md:grid-cols-3 grid-cols-1 gap-6 pt-4">
+        {allUpcomingClasess.map((onlineClass) => (
+          <div key={onlineClass?.class_id}>
+            <Link href={onlineClass?.sharedLink}>
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    <RocketIcon className="h-8 w-8 text-isky_blue" />
+                  </CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <div>
+                    <h1 className="text-isky_orange font-semibold truncate text-lg">{onlineClass?.coursetitle}</h1>
+                    <p className="text-slate-400">{ new Date(onlineClass?.schedule).toLocaleString()  }</p>
+
+                    <p className="text-slate-500 pt-3 line-clamp-2">{onlineClass?.description}</p>
+                  </div>
+                </CardContent>
+              </Card>
+            </Link>
+          </div>
+        ))}
+      </div>
+
+
+
     </section>
   )
 }
