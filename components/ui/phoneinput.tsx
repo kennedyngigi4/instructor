@@ -17,7 +17,7 @@ const CustomPhoneInput: React.FC<PhoneInputProps> = ({ value, onChange, error })
             <PhoneInput
                 value={value}
                 onChange={onChange}
-                defaultCountry="KE" // Default to Kenya (Change as needed)
+                defaultCountry="AE" // Default to Kenya (Change as needed)
                 international // Enables country codes
                 className={cn(
                     "w-full border rounded-md p-2",
